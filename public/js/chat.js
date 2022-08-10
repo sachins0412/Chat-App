@@ -9,3 +9,17 @@ document.querySelector("#chatMessage").addEventListener("submit", (e) => {
   const message = e.target.elements.message.value;
   socket.emit("sendMessage", message);
 });
+
+document.querySelector("#sendLocation").addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    return alert("your browser doesnt support this feature");
+  }
+
+  navigator.geolocation.getCurrentPosition(({ coords }) => {
+    console.log(coords.latitude, coords.longitude);
+    socket.emit("sendLocation", {
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+    });
+  });
+});
