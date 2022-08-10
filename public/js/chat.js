@@ -16,7 +16,6 @@ document.querySelector("#sendLocation").addEventListener("click", () => {
   }
 
   navigator.geolocation.getCurrentPosition(({ coords }) => {
-    console.log(coords.latitude, coords.longitude);
     socket.emit("sendLocation", {
       latitude: coords.latitude,
       longitude: coords.longitude,
