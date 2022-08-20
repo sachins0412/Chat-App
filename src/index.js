@@ -11,32 +11,39 @@ const port = process.env.PORT || 3000;
 const server = http.createServer(app);
 
 const Filter = require("bad-words");
+const {
+  generateMessage,
+  generateLocationMessage,
+} = require("./utils/messages");
+
 const io = socketio(server);
 io.on("connection", (socket) => {
   console.log("new connection");
 
-  socket.emit("message", "Welcome");
-  socket.broadcast.emit("message", "a new user has joined");
+  socket.emit("message", generateMessage("Welcome"));
+  socket.broadcast.emit("message", generateMessage("a new user has joined"));
 
   socket.on("sendMessage", (message, callback) => {
     const filter = new Filter();
     if (filter.isProfane(message)) {
       return callback("Strong language not allowed here");
     }
-    io.emit("message", message);
+    io.emit("message", generateMessage(message));
     callback();
   });
 
   socket.on("sendLocation", ({ latitude, longitude }, callback) => {
     io.emit(
       "locationMessage",
-      `https://google.com/maps?q=${latitude},${longitude}`
+      generateLocationMessage(
+        `https://google.com/maps?q=${latitude},${longitude}`
+      )
     );
     callback();
   });
 
   socket.on("disconnect", () => {
-    io.emit("message", "a user has left the chat");
+    io.emit("message", generateMessage("a user has left the chat"));
   });
 });
 
