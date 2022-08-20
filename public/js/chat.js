@@ -6,8 +6,13 @@ const $messageFormInput = document.querySelector("#message");
 const $messageFormButton = document.querySelector("#submit");
 const $sendLocationButton = document.querySelector("#sendLocation");
 const $message = document.querySelector("#messages");
+
 const locationTemplate = document.querySelector("#location-template").innerHTML;
 const messageTemplate = document.querySelector("#message-template").innerHTML;
+
+const { username, room } = Qs.parse(location.search, {
+  ignoreQueryPrefix: true,
+});
 
 socket.on("message", (message) => {
   console.log(message);
@@ -61,3 +66,5 @@ socket.on("locationMessage", (location) => {
   });
   $message.insertAdjacentHTML("beforeend", html);
 });
+
+socket.emit("join", { username, room });
