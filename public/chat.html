@@ -11,7 +11,13 @@
         <div id="messages" class="chat__messages"></div>
         <div class="compose">
           <form id="chatMessage">
-            <input type="text" id="message" placeholder="type your message" />
+            <input
+              type="text"
+              id="message"
+              placeholder="type your message"
+              required
+              autocomplete="off"
+            />
             <button id="submit">Send</button>
           </form>
           <button id="sendLocation">send location</button>
