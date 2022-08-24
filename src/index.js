@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
     }
 
     socket.join(user.room);
-    socket.emit("message", generateMessage("Welcome!"));
+    socket.emit("message", generateMessage(user.username, "Welcome!"));
     socket.broadcast
       .to(room)
       .emit("message", generateMessage(`${user.username} has joined`));
@@ -44,7 +44,7 @@ io.on("connection", (socket) => {
       const user = getUser(socket.id);
       return callback("Strong language not allowed here");
     }
-    io.to(user.room).emit("message", generateMessage(message));
+    io.to(user.room).emit("message", generateMessage(user.username, message));
     callback();
   });
 
@@ -53,6 +53,7 @@ io.on("connection", (socket) => {
     io.to(user.room).emit(
       "locationMessage",
       generateLocationMessage(
+        user.username,
         `https://google.com/maps?q=${latitude},${longitude}`
       )
     );
