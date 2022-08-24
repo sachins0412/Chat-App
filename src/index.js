@@ -16,7 +16,12 @@ const {
   generateLocationMessage,
 } = require("./utils/messages");
 
-const { addUser, removeUser, getUser } = require("./utils/users");
+const {
+  addUser,
+  removeUser,
+  getUser,
+  getUsersInRoom,
+} = require("./utils/users");
 
 const io = socketio(server);
 io.on("connection", (socket) => {
@@ -34,6 +39,10 @@ io.on("connection", (socket) => {
     socket.broadcast
       .to(room)
       .emit("message", generateMessage(`${user.username} has joined`));
+    io.to(user.room).emit("roomData", {
+      room: user.room,
+      users: getUsersInRoom(user.room),
+    });
     callback();
   });
 
@@ -67,6 +76,10 @@ io.on("connection", (socket) => {
         "message",
         generateMessage(`${user.username} has left the chat`)
       );
+      io.to(user.room).emit("roomData", {
+        room: user.room,
+        users: getUsersInRoom(user.room),
+      });
     }
   });
 });
