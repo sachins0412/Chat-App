@@ -16,7 +16,7 @@ const {
   generateLocationMessage,
 } = require("./utils/messages");
 
-const { addUser, removeUser } = require("./utils/users");
+const { addUser, removeUser, getUser } = require("./utils/users");
 
 const io = socketio(server);
 io.on("connection", (socket) => {
@@ -38,11 +38,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", (message, callback) => {
+    const user = getUser(socket.id);
     const filter = new Filter();
     if (filter.isProfane(message)) {
       return callback("Strong language not allowed here");
     }
-    io.emit("message", generateMessage(message));
+    io.to(user.room).emit("message", generateMessage(message));
     callback();
   });
 
