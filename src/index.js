@@ -41,6 +41,7 @@ io.on("connection", (socket) => {
     const user = getUser(socket.id);
     const filter = new Filter();
     if (filter.isProfane(message)) {
+      const user = getUser(socket.id);
       return callback("Strong language not allowed here");
     }
     io.to(user.room).emit("message", generateMessage(message));
@@ -48,7 +49,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendLocation", ({ latitude, longitude }, callback) => {
-    io.emit(
+    const user = getUser(socket.id);
+    io.to(user.room).emit(
       "locationMessage",
       generateLocationMessage(
         `https://google.com/maps?q=${latitude},${longitude}`
