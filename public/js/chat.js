@@ -67,4 +67,4 @@ socket.on("locationMessage", (location) => {
   $message.insertAdjacentHTML("beforeend", html);
 });
 
-socket.emit("join", { username, room });
+socket.emit("join", { username, room }, (error) => {});
