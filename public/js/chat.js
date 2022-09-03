@@ -15,6 +15,15 @@ const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
 
+const autoScroll = () => {
+  const element = $message.lastElementChild;
+  element.scrollIntoView({
+    behavior: "smooth",
+    block: "end",
+    inline: "nearest",
+  });
+};
+
 socket.on("message", (message) => {
   const html = Mustache.render(messageTemplate, {
     username: message.username,
@@ -22,6 +31,7 @@ socket.on("message", (message) => {
     createdAt: moment(message.createdAt).format("h:mm a"),
   });
   $message.insertAdjacentHTML("beforeend", html);
+  autoScroll();
 });
 
 $messageForm.addEventListener("submit", (e) => {
@@ -67,6 +77,7 @@ socket.on("locationMessage", (location) => {
     createdAt: moment(location.createdAt).format("h:mm a"),
   });
   $message.insertAdjacentHTML("beforeend", html);
+  autoScroll();
 });
 
 socket.emit("join", { username, room }, (error) => {
